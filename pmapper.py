@@ -18,10 +18,15 @@ import principalmap.enumerator
 from principalmap.querying import perform_query
 from principalmap.visualizing import perform_visualization
 import sys
+from datetime import datetime
 
 from principalmap.awsgraph import AWSGraph
 from principalmap.awsnode import AWSNode
 from principalmap.awsedge import AWSEdge
+import s3util
+
+BUCKET_NAME = "corighose-pmapper"
+BUCKET_REGION = "us-east-1"
 
 def main():
 	mainparser = argparse.ArgumentParser()
@@ -101,6 +106,7 @@ def handle_visualize(parsed):
 	filepath = os.path.join(os.path.expanduser('~'), '.principalmap/graphfile-' + parsed.profile)
 	try:
 		graph = graph_from_file(filepath)
+		
 	except Exception as ex:
 		print('Unable to use the file "' + filepath + '" to perform a query.')
 		print(str(ex))
@@ -114,8 +120,17 @@ def handle_visualize(parsed):
 		print('Unable to access STS using the profile "' + parsed.profile + '"')
 		print('Exiting.')
 		sys.exit(-1)
-
 	perform_visualization(botocore_session, graph)
+	# Edited by Collins
+	dateNow = datetime.now()
+	unique_outputFile = "output.svg" + dateNow.strftime("%H-%M-%S-%f")
+	s3ObjectName = unique_outputFile + ".svg"
+	uploaded = s3util.upload_to_s3("output.svg",BUCKET_NAME,s3ObjectName)
+	if uploaded is True:
+		response = s3util.create_presigned_url(BUCKET_NAME, s3ObjectName, BUCKET_REGION)
+		return print(response)
+	else:
+		return print("there was a problem")
 
 def pull_graph(profilearg):
 	botocore_session = botocore.session.Session(profile=profilearg)
