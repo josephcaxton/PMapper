@@ -25,6 +25,7 @@ from principalmap.awsnode import AWSNode
 from principalmap.awsedge import AWSEdge
 import s3util
 
+# Added by Collins
 BUCKET_NAME = "corighose-pmapper"
 BUCKET_REGION = "us-east-1"
 
@@ -121,7 +122,7 @@ def handle_visualize(parsed):
 		print('Exiting.')
 		sys.exit(-1)
 	perform_visualization(botocore_session, graph)
-	# Edited by Collins
+	#Added by Collins
 	dateNow = datetime.now()
 	unique_outputFile = "output.svg" + dateNow.strftime("%H-%M-%S-%f")
 	s3ObjectName = unique_outputFile + ".svg"
