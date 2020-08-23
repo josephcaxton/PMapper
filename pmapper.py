@@ -54,7 +54,10 @@ def lambda_handler(event, context):
 	)
 	parsed = mainparser.parse_args(sys.argv[1:])'''
 	
-	if event['value'] == 'graph':
+	if event['value'] == 'graph_visualize':
+		handle_graph(event['value'])
+		handle_visualize(event['value'])
+	elif event['value'] == 'graph':
 		handle_graph(event['value'])
 	elif event['value'] == 'query':
 		handle_query(event['value'])
