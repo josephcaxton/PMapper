@@ -29,8 +29,8 @@ import s3util
 BUCKET_NAME = "corighose-pmapper"
 BUCKET_REGION = "us-east-1"
 
-def main():
-	mainparser = argparse.ArgumentParser()
+def lambda_handler(event, context):
+	'''mainparser = argparse.ArgumentParser()
 	mainparser.add_argument('--profile', default='default', help='Profile stored for the AWS CLI')
 	subparsers = mainparser.add_subparsers(
 		title='subcommands',
@@ -52,14 +52,14 @@ def main():
 		help='For visualizing the pulled graph.',
 		description='Creates a visualization of the passed graph.'
 	)
-	parsed = mainparser.parse_args(sys.argv[1:])
+	parsed = mainparser.parse_args(sys.argv[1:])'''
 	
-	if parsed.picked_cmd == 'graph':
-		handle_graph(parsed)
-	elif parsed.picked_cmd == 'query':
-		handle_query(parsed)
-	elif parsed.picked_cmd == 'visualize':
-		handle_visualize(parsed)
+	if event['value'] == 'graph':
+		handle_graph(event['value'])
+	elif event['value'] == 'query':
+		handle_query(event['value'])
+	elif event['value'] == 'visualize':
+		handle_visualize(event['value'])
 
 def handle_graph(parsed):
 	if not parsed.display:
@@ -186,5 +186,5 @@ def graph_from_file(filepath):
 				result.edges.append(AWSEdge(result.nodes[pair[0]], result.nodes[pair[1]], pair[2], pair[3]))
 	return result
 
-if __name__ == '__main__':
-	main()
+#if __name__ == '__main__':
+#	main()
